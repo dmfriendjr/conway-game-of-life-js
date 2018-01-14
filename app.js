@@ -35,8 +35,8 @@ class Cell {
 		let xStart = this.xPos - 1 > 0 ? this.xPos - 1 : 0;
 		let yStart = this.yPos - 1 > 0 ? this.yPos - 1 : 0;
 
-		for (let i = xStart; i <= Math.min(this.xPos + 1, 99); i++) {
-			for (let j = yStart; j <= Math.min(this.yPos + 1, 99); j++) {
+		for (let i = xStart; i <= Math.min(this.xPos + 1, cells.length-1); i++) {
+			for (let j = yStart; j <= Math.min(this.yPos + 1, cells[i].length-1); j++) {
 				if (cells[i][j].alive && cells[i][j] !== this) {
 					aliveNeighbours++;
 				}
@@ -64,13 +64,20 @@ class Cell {
 let canvas = document.getElementById('game-display');
 let boardWidth = 1280;
 let boardHeight = 720;
+let gridWidth;
+let gridHeight;
 let padding = 20;
+let autoPlayInterval;
+let isPlaying = false;
 
 let context = canvas.getContext('2d');
 
 let currentGenCells = [];
 
 function generateStartingCells(xDimensions,yDimensions, randomAlive) {
+	gridWidth = xDimensions;
+	gridHeight = yDimensions;
+
 	for (let i = 0; i < xDimensions; i++) {
 		currentGenCells[i] = new Array(yDimensions);	
 
@@ -85,14 +92,14 @@ function generateStartingCells(xDimensions,yDimensions, randomAlive) {
 }
 
 function updateCells() {
-	for (let i = 0; i < 100; i++) {
-		for (let j = 0; j < 100; j++) {
+	for (let i = 0; i < gridWidth; i++) {
+		for (let j = 0; j < gridHeight; j++) {
 			currentGenCells[i][j].checkNeighbours(currentGenCells);
 		}
 	}
 	
-	for (let i = 0; i < 100; i++) {
-		for (let j = 0; j < 100; j++) {
+	for (let i = 0; i < gridWidth; i++) {
+		for (let j = 0; j < gridHeight; j++) {
 			currentGenCells[i][j].nextGeneration();
 		}
 	}
@@ -122,8 +129,32 @@ canvas.addEventListener('click', function(event) {
 	currentGenCells[xGridPos][yGridPos].birth();
 });
 
+document.getElementById('play-button').addEventListener('click', () => {
+	autoPlayInterval = setInterval(updateCells, 100 * (document.getElementById('speedSlider').value / 100));
+	isPlaying = true;
+});
+
+document.getElementById('speedSlider').oninput = function() {
+	autoPlaySpeed = this.value / 100;
+	if (isPlaying) {
+		clearInterval(autoPlayInterval);
+		autoPlayInterval = setInterval(updateCells, 100 * (this.value / 100));
+	}
+}
+
+document.getElementById('pause-button').addEventListener('click', () => {
+	clearInterval(autoPlayInterval);
+	isPlaying = false;
+});
+
+document.getElementById('reset-button').addEventListener('click', () => {
+	clearInterval(autoPlayInterval);
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	generateStartingCells(100,70, true);
+});
+
 document.addEventListener('keydown', (event) => {
 	updateCells();
 })
 
-generateStartingCells(100,100, true);
+generateStartingCells(100,70, true);

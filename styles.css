@@ -1,0 +1,14 @@
+.control-panel {
+	float: left;
+	width: 25%;
+	height: 100%;
+}
+
+.display-panel {
+	display: inline-block;
+	width: 75%;
+}
+
+#speedSlider {
+	direction: rtl;
+}
