@@ -30,14 +30,14 @@ class Cell {
 		context.clearRect(this.xPos*10,this.yPos*10, 10, 10);
 	}
 
-	checkNeighbours() {
+	checkNeighbours(cells) {
 		let aliveNeighbours = 0;
 		let xStart = this.xPos - 1 > 0 ? this.xPos - 1 : 0;
 		let yStart = this.yPos - 1 > 0 ? this.yPos - 1 : 0;
 
 		for (let i = xStart; i <= Math.min(this.xPos + 1, 99); i++) {
 			for (let j = yStart; j <= Math.min(this.yPos + 1, 99); j++) {
-				if (currentGenCells[i][j].alive && currentGenCells[i][j] !== this) {
+				if (cells[i][j].alive && cells[i][j] !== this) {
 					aliveNeighbours++;
 				}
 			}
@@ -82,14 +82,12 @@ function generateStartingCells(xDimensions,yDimensions, randomAlive) {
 			}
 		}
 	}
-
-	console.log(currentGenCells);
 }
 
 function updateCells() {
 	for (let i = 0; i < 100; i++) {
 		for (let j = 0; j < 100; j++) {
-			currentGenCells[i][j].checkNeighbours();
+			currentGenCells[i][j].checkNeighbours(currentGenCells);
 		}
 	}
 	
@@ -98,8 +96,6 @@ function updateCells() {
 			currentGenCells[i][j].nextGeneration();
 		}
 	}
-	
-	console.log('done');
 }
 
 function drawBoard() {
