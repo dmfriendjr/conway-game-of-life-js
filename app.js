@@ -5,9 +5,7 @@ let boardHeight = 720;
 let padding = 20;
 
 let context = canvas.getContext('2d');
-let gridState = {
-		x: {}
-	};
+let gridState = {};
 
 function drawBoard() {
 	context.beginPath();
@@ -26,41 +24,59 @@ function drawBoard() {
 	context.stroke();
 }
 
-drawBoard();
+
+let currentGenCells = [];
 
 let cells = [];
+let dyingCells = [];
+let birthedCells = [];
+
+
+
 
 canvas.addEventListener('click', function(event) {
 	let xGridPos = Math.floor(event.offsetX / 10);
 	let yGridPos = Math.floor(event.offsetY / 10);
-	console.log(xGridPos, yGridPos);
-	cells.push(new Cell(xGridPos, yGridPos));
+	
+	currentGenCells[xGridPos][yGridPos].birth();
 });
 
-
 function updateCells() {
-	let len = cells.length;
-	for (let i = 0; i < len; i++) {
-		cells[i].checkNeighbours();
+	for (let i = 0; i < 100; i++) {
+		for (let j = 0; j < 100; j++) {
+			currentGenCells[i][j].checkNeighbours();
+		}
 	}
+	
+	for (let i = 0; i < 100; i++) {
+		for (let j = 0; j < 100; j++) {
+			currentGenCells[i][j].nextGeneration();
+		}
+	}
+	
+	console.log('done');
 }
 
-setInterval(updateCells.bind(this), 1000);
-
 class Cell {
-	constructor(x, y) {
+	constructor(x, y, isAlive) {
 		this.xPos = x;
 		this.yPos = y;
-		if (gridState[x] === undefined) {
-			gridState[x] = {};
-		} else if (gridState[x][y] !== undefined || gridState[x][y] === true) {
-			console.log('Occupied');
-			return delete this;
+		this.alive = isAlive;
+		this.aliveNextGen = isAlive;
+
+		if (this.alive) {
+			this.drawCell(this.xPos, this.yPos);
 		}
-		gridState[x][y] = true;
-		console.log(gridState);
-		
-		this.drawCell(this.xPos, this.yPos);
+	}
+
+	birth() {
+		this.alive = true;
+		this.drawCell(this.xPos,this.yPos);
+	}
+
+	die() {
+		this.alive = false;
+		this.clearCell();
 	}
 
 	drawCell(x, y) {
@@ -69,24 +85,59 @@ class Cell {
 		context.stroke();
 	}
 
+	clearCell() {
+		context.clearRect(this.xPos*10,this.yPos*10, 10, 10);
+	}
+
 	checkNeighbours() {
-		let numNeighbours = 0;
-		console.log('testing', this.xPos, this.yPos);
-		for (let i = this.xPos-1; i <= this.xPos + 1; i++) {
-			for (let j = this.yPos-1; j <= this.yPos + 1; j++) {
-				if (i !== this.xPos && j !== this.yPos) {
-					if (gridState[i] !== undefined) {
-						if (gridState[i][j] !== undefined) {
-							if (gridState[i][j] === true) {
-								numNeighbours++;
-							}
-						}
-					}
+		let aliveNeighbours = 0;
+		let xStart = this.xPos - 1 > 0 ? this.xPos - 1 : 0;
+		let yStart = this.yPos - 1 > 0 ? this.yPos - 1 : 0;
+
+		for (let i = xStart; i <= Math.min(this.xPos + 1, 99); i++) {
+			for (let j = yStart; j <= Math.min(this.yPos + 1, 99); j++) {
+				if (currentGenCells[i][j].alive && currentGenCells[i][j] !== this) {
+					aliveNeighbours++;
 				}
 			}
 		}
-
-		console.log(numNeighbours);
+		
+		if (!this.alive && aliveNeighbours === 3) {
+			this.aliveNextGen = true;
+		} else if (this.alive && (aliveNeighbours < 2 || aliveNeighbours > 3) ) {
+			this.aliveNextGen = false;
+		} else if (this.alive && (aliveNeighbours === 2 || aliveNeighbours === 3)) {
+			this.aliveNextGen = true;
+		}
 	}
 
+	nextGeneration() {
+		if (this.alive && !this.aliveNextGen) {
+			this.die();
+		} else if (!this.alive && this.aliveNextGen) {
+			this.birth();
+		}
+	}
 }
+
+document.addEventListener('keydown', (event) => {
+	updateCells();
+})
+
+function generateStartingCells(xDimensions,yDimensions, randomAlive) {
+	for (let i = 0; i < xDimensions; i++) {
+		currentGenCells[i] = new Array(yDimensions);	
+
+		for (let j = 0; j < yDimensions; j++) {
+			if (!randomAlive) {
+				currentGenCells[i][j] = new Cell(i,j,false);
+			} else {
+				currentGenCells[i][j] = new Cell(i,j,Math.round(Math.random()));
+			}
+		}
+	}
+
+	console.log(currentGenCells);
+}
+
+generateStartingCells(100,100, true);
