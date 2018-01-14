@@ -1,9 +1,10 @@
 class Cell {
-	constructor(x, y, isAlive) {
+	constructor(x, y, isAlive, randomColor) {
 		this.xPos = x;
 		this.yPos = y;
 		this.alive = isAlive;
 		this.aliveNextGen = isAlive;
+		this.color = randomColor || '#000000';
 
 		if (this.alive) {
 			this.drawCell(this.xPos, this.yPos);
@@ -23,6 +24,7 @@ class Cell {
 	drawCell(x, y) {
 		context.beginPath();
 		context.fillRect(x*10,y*10, 10, 10);
+		context.fillStyle = this.color; 
 		context.stroke();
 	}
 
@@ -69,26 +71,37 @@ let gridHeight;
 let padding = 20;
 let autoPlayInterval;
 let isPlaying = false;
-
+let randomColors = document.getElementById('random-colors-checkbox'); 
 let context = canvas.getContext('2d');
 
 let currentGenCells = [];
 
-function generateStartingCells(xDimensions,yDimensions, randomAlive) {
+function generateStartingCells(xDimensions,yDimensions, randomAlive, randomColors) {
 	gridWidth = xDimensions;
 	gridHeight = yDimensions;
+	console.log(randomColors);
 
 	for (let i = 0; i < xDimensions; i++) {
 		currentGenCells[i] = new Array(yDimensions);	
 
 		for (let j = 0; j < yDimensions; j++) {
 			if (!randomAlive) {
-				currentGenCells[i][j] = new Cell(i,j,false);
+
+				currentGenCells[i][j] = new Cell(i,j,false, randomColors ? getRandomColor() : null);
 			} else {
-				currentGenCells[i][j] = new Cell(i,j,Math.round(Math.random()));
+				currentGenCells[i][j] = new Cell(i,j,Math.round(Math.random()), randomColors ? getRandomColor() : null);
 			}
 		}
 	}
+}
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
 function updateCells() {
@@ -147,14 +160,17 @@ document.getElementById('pause-button').addEventListener('click', () => {
 	isPlaying = false;
 });
 
+document.getElementById('random-colors-checkbox').addEventListener('click', () => {
+})
+
 document.getElementById('reset-button').addEventListener('click', () => {
 	clearInterval(autoPlayInterval);
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	generateStartingCells(100,70, true);
+	generateStartingCells(100,70, true, randomColors.checked);
 });
 
 document.addEventListener('keydown', (event) => {
 	updateCells();
 })
 
-generateStartingCells(100,70, true);
+generateStartingCells(100,70, true, randomColors.checked);
