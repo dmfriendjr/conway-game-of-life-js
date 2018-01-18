@@ -80,6 +80,8 @@ let context = canvas.getContext('2d');
 let currentGenCells = [];
 
 function generateStartingCells(xDimensions,yDimensions, randomAlive, randomColors) {
+	canvas.width = 10 * xDimensions;
+	canvas.height = 10 * yDimensions;
 	gridWidth = xDimensions;
 	gridHeight = yDimensions;
 	let randomChance;
@@ -187,7 +189,9 @@ document.getElementById('random-colors-checkbox').addEventListener('click', () =
 document.getElementById('reset-button').addEventListener('click', () => {
 	clearInterval(autoPlayInterval);
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	generateStartingCells(100,70, true, randomColors.checked);
+	let xGridSize = document.getElementById('x-dimension-input').value;
+	let yGridSize = document.getElementById('y-dimension-input').value;
+	generateStartingCells(xGridSize,yGridSize, true, randomColors.checked);
 });
 
 

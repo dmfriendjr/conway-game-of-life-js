@@ -9,6 +9,10 @@
 	width: 75%;
 }
 
+canvas { 
+	margin: 5px;
+}
+
 #speedSlider {
 	direction: rtl;
 }
