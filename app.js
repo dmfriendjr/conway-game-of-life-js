@@ -46,10 +46,13 @@ class Cell {
 		}
 		
 		if (!this.alive && aliveNeighbours === 3) {
+			//Creates a new cell here due to 'reproduction' next generation
 			this.aliveNextGen = true;
 		} else if (this.alive && (aliveNeighbours < 2 || aliveNeighbours > 3) ) {
+			//Sparse population or overcrowding leads to death
 			this.aliveNextGen = false;
 		} else if (this.alive && (aliveNeighbours === 2 || aliveNeighbours === 3)) {
+			//Ideal conditions, cell continues to live
 			this.aliveNextGen = true;
 		}
 	}
@@ -79,7 +82,14 @@ let currentGenCells = [];
 function generateStartingCells(xDimensions,yDimensions, randomAlive, randomColors) {
 	gridWidth = xDimensions;
 	gridHeight = yDimensions;
+	let randomChance;
+	let numAlive = 0;
+	let numNotAlive = 0;
 	console.log(randomColors);
+
+	if (randomAlive) {
+		randomChance = document.getElementById('aliveChanceSlider').value / 100;
+	}
 
 	for (let i = 0; i < xDimensions; i++) {
 		currentGenCells[i] = new Array(yDimensions);	
@@ -89,10 +99,14 @@ function generateStartingCells(xDimensions,yDimensions, randomAlive, randomColor
 
 				currentGenCells[i][j] = new Cell(i,j,false, randomColors ? getRandomColor() : null);
 			} else {
-				currentGenCells[i][j] = new Cell(i,j,Math.round(Math.random()), randomColors ? getRandomColor() : null);
+				let alive = Math.random() <= randomChance;
+				alive ? numAlive++ : numNotAlive++;
+				currentGenCells[i][j] = new Cell(i,j,alive, randomColors ? getRandomColor() : null);
 			}
 		}
 	}
+
+	console.log(randomChance, numAlive, numNotAlive)
 }
 
 function getRandomColor() {
@@ -139,7 +153,14 @@ canvas.addEventListener('click', function(event) {
 	let xGridPos = Math.floor(event.offsetX / 10);
 	let yGridPos = Math.floor(event.offsetY / 10);
 	
-	currentGenCells[xGridPos][yGridPos].birth();
+	isPlaying = false;
+	clearInterval(autoPlayInterval);
+
+	if (currentGenCells[xGridPos][yGridPos].alive) {
+		currentGenCells[xGridPos][yGridPos].die();
+	} else {
+		currentGenCells[xGridPos][yGridPos].birth();
+	}
 });
 
 document.getElementById('play-button').addEventListener('click', () => {
