@@ -190,8 +190,15 @@ document.getElementById('reset-button').addEventListener('click', () => {
 	generateStartingCells(100,70, true, randomColors.checked);
 });
 
-document.addEventListener('keydown', (event) => {
-	updateCells();
+
+
+document.getElementById('step-button').addEventListener('click', () => {
+	if (isPlaying) {
+		clearInterval(autoPlayInterval);
+		updateCells();
+	} else {
+		updateCells();
+	}
 })
 
 generateStartingCells(100,70, true, randomColors.checked);
