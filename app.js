@@ -205,4 +205,4 @@ document.getElementById('step-button').addEventListener('click', () => {
 	}
 })
 
-generateStartingCells(100,70, true, randomColors.checked);
+generateStartingCells(100,60, true, randomColors.checked);
