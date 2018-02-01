@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<link rel="stylesheet" href="styles.css">
-	<title></title>
+	<title>Conway's Game Of Life</title>
 </head>
 <body>
 	<div class="navbar bg-light mb-3">
@@ -31,7 +31,6 @@
 						<input type="checkbox" id="random-colors-checkbox">
 						<label for="random-colors-checkbox">Random Colors</label>
 				</div>
-
 				<div class="m-3">
 					<div class="slidercontainer">
 							<span>Random Generation Control</span>
@@ -64,11 +63,6 @@
 					<input type="button" class="btn-danger" value="Reset" id="reset-button">
 				</div>
 				</div>
-				<!-- <label for="x-dimension-input">X Grid Size:</label>	
-				<input type="text" value="100" id="x-dimension-input">
-				<label for="y-dimension-input">Y Grid Size:</label>
-				<input type="text" value="70" id="y-dimension-input">
-				<input type="button" class="btn-danger" value="Reset" id="reset-button"> -->
 			<div class="col-9">
 				<canvas id="game-display" width="1000" height="700"></canvas>	
 			</div>
