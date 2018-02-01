@@ -2,41 +2,71 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<link rel="stylesheet" href="styles.css">
 	<title></title>
 </head>
 <body>
-	<div class="control-panel">
-		Controls
-		<input type="button" value="Play" id="play-button">
-		<input type="button" value="Pause" id="pause-button">
-		<input type="button" value="Step" id="step-button">
-		<input type="checkbox" checked id="random-colors-checkbox"> Random Colors?
-		<div class="slidecontainer">
-			<span>Speed Control</span>
-			<br>
-			<span>1%</span>
-			<input type="range" min="1" max="100" value="100" class="slider" id="speedSlider">
-			<span>100%</span>
-		</div>
-
-		<div class="slidercontainer">
-			<span>Random Generation Control</span>
-			<br>
-			<span>0%</span>
-			<input type="range" min="0" max="100" value="50" class="slider" id="aliveChanceSlider">
-			<span>100%</span>
-		</div>		
-		<label for="x-dimension-input">X Grid Size:</label>	
-		<input type="text" value="100" id="x-dimension-input">
-		<br>
-		<label for="y-dimension-input">Y Grid Size:</label>
-		<input type="text" value="70" id="y-dimension-input">
-		<input type="button" value="Reset" id="reset-button">
-
+	<div class="navbar bg-light mb-3">
+		<span class="navbar-brand">Conway's Game Of Life</span>
 	</div>
-	<div class="display-panel">
-		<canvas id="game-display" width="1000" height="700"></canvas>	
+	<div class="container-responsive">
+		<div class="row">
+			<div class="col-2">
+				<div class="m-3">
+					<button type="button" class="btn btn-success" id="play-button"><i class="fas fa-play"></i></button>
+					<button type="button" class="btn btn-danger" id="pause-button"><i class="fas fa-stop"></i></button>
+					<button type="button" class="btn btn-info" id="step-button"><i class="fas fa-step-forward"></i></button>
+				</div>
+				<div class="m-3">
+						<input type="checkbox" id="random-colors-checkbox">
+						<label for="random-colors-checkbox">Random Colors</label>
+				</div>
+				<div class="m-3">
+							<span>Speed Control</span>
+							<div>
+							<span class="slider-label">1</span>
+							<input type="range" min="1" max="100" value="100" class="slider" id="speedSlider">
+							<span class="slider-label">100</span>
+							</div>
+				</div>
+				<div class="m-3">
+					<div class="slidercontainer">
+							<span>Random Generation Control</span>
+							<div>
+								<span class="slider-label">0</span>
+								<input type="range" min="0" max="100" value="50" class="slider" id="aliveChanceSlider">
+								<span class="slider-label">100</span>
+							</div>
+					</div>		
+				</div>
+				<div class="input-group m-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text" id="basic-addon1">X Grid Size</span>
+				</div>
+					<input type="text" class="form-control" value="100" id="x-dimension-input" aria-label="Username" aria-describedby="basic-addon1">
+				</div>
+				<div class="input-group m-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon1">Y Grid Size</span>
+						</div>
+							<input type="text" class="form-control" value="70" id="y-dimension-input" aria-label="Username" aria-describedby="basic-addon1">
+						</div>
+				<div class="input-group m-3">
+					<input type="button" class="btn-danger" value="Reset" id="reset-button">
+				</div>
+				</div>
+				<!-- <label for="x-dimension-input">X Grid Size:</label>	
+				<input type="text" value="100" id="x-dimension-input">
+				<label for="y-dimension-input">Y Grid Size:</label>
+				<input type="text" value="70" id="y-dimension-input">
+				<input type="button" class="btn-danger" value="Reset" id="reset-button"> -->
+			<div class="col-9">
+				<canvas id="game-display" width="1000" height="700"></canvas>	
+			</div>
+			</div>
+		</div>
 	</div>
 	<script src="./app.js"></script>
 </body>
