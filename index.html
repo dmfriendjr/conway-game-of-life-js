@@ -12,7 +12,7 @@
 		<span class="navbar-brand">Conway's Game Of Life</span>
 	</div>
 	<div class="container-responsive">
-		<div class="row">
+		<div class="row justify-content-center">
 			<div class="col-2">
 				<div class="m-3">
 							<span>Speed Control</span>
@@ -43,17 +43,23 @@
 					</div>		
 				</div>
 				<div class="input-group m-3">
-				<div class="input-group-prepend">
-					<span class="input-group-text" id="basic-addon1">X Grid Size</span>
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon1">Cell Pixel Size</span>
+						</div>
+						<input type="text" class="form-control" value="10" id="cell-size-input" aria-label="Username" aria-describedby="basic-addon1">
 				</div>
+				<div class="input-group m-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">X Grid Size</span>
+					</div>
 					<input type="text" class="form-control" value="100" id="x-dimension-input" aria-label="Username" aria-describedby="basic-addon1">
 				</div>
 				<div class="input-group m-3">
-						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon1">Y Grid Size</span>
-						</div>
-							<input type="text" class="form-control" value="60" id="y-dimension-input" aria-label="Username" aria-describedby="basic-addon1">
-						</div>
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">Y Grid Size</span>
+					</div>
+					<input type="text" class="form-control" value="60" id="y-dimension-input" aria-label="Username" aria-describedby="basic-addon1">
+				</div>
 				<div class="input-group m-3">
 					<input type="button" class="btn-danger" value="Reset" id="reset-button">
 				</div>

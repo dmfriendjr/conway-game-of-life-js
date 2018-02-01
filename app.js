@@ -1,9 +1,10 @@
 class Cell {
-	constructor(x, y, isAlive, randomColor) {
+	constructor(x, y, isAlive, randomColor, cellSize) {
 		this.xPos = x;
 		this.yPos = y;
 		this.alive = isAlive;
 		this.aliveNextGen = isAlive;
+		this.cellSize = cellSize;
 		this.color = randomColor || '#000000';
 
 		if (this.alive) {
@@ -23,13 +24,13 @@ class Cell {
 
 	drawCell(x, y) {
 		context.beginPath();
-		context.fillRect(x*10,y*10, 10, 10);
+		context.fillRect(x*this.cellSize,y*this.cellSize, this.cellSize, this.cellSize);
 		context.fillStyle = this.color; 
 		context.stroke();
 	}
 
 	clearCell() {
-		context.clearRect(this.xPos*10,this.yPos*10, 10, 10);
+		context.clearRect(this.xPos*this.cellSize,this.yPos*this.cellSize, this.cellSize, this.cellSize);
 	}
 
 	checkNeighbours(cells) {
@@ -75,13 +76,14 @@ let padding = 20;
 let autoPlayInterval;
 let isPlaying = false;
 let randomColors = document.getElementById('random-colors-checkbox'); 
+let cellSizeInput = document.getElementById('cell-size-input');
 let context = canvas.getContext('2d');
 
 let currentGenCells = [];
 
-function generateStartingCells(xDimensions,yDimensions, randomAlive, randomColors) {
-	canvas.width = 10 * xDimensions;
-	canvas.height = 10 * yDimensions;
+function generateStartingCells(xDimensions,yDimensions, randomAlive, randomColors, cellSize) {
+	canvas.width = cellSize * xDimensions;
+	canvas.height = cellSize * yDimensions;
 	gridWidth = xDimensions;
 	gridHeight = yDimensions;
 	let randomChance;
@@ -98,12 +100,11 @@ function generateStartingCells(xDimensions,yDimensions, randomAlive, randomColor
 
 		for (let j = 0; j < yDimensions; j++) {
 			if (!randomAlive) {
-
-				currentGenCells[i][j] = new Cell(i,j,false, randomColors ? getRandomColor() : null);
+				currentGenCells[i][j] = new Cell(i,j,false, randomColors ? getRandomColor() : null, cellSize);
 			} else {
 				let alive = Math.random() <= randomChance;
 				alive ? numAlive++ : numNotAlive++;
-				currentGenCells[i][j] = new Cell(i,j,alive, randomColors ? getRandomColor() : null);
+				currentGenCells[i][j] = new Cell(i,j,alive, randomColors ? getRandomColor() : null, cellSize);
 			}
 		}
 	}
@@ -132,23 +133,6 @@ function updateCells() {
 			currentGenCells[i][j].nextGeneration();
 		}
 	}
-}
-
-function drawBoard() {
-	context.beginPath();
-
-	for (let x = 0; x <= boardWidth; x += 10) {
-			context.moveTo(x, 0);
-			context.lineTo(x, boardHeight);
-	}
-
-	for (let y = 0; y <= boardHeight; y += 10) {
-		context.moveTo(0, y);
-		context.lineTo(boardWidth, y);
-	}
-
-	context.strokeStyle = "black";
-	context.stroke();
 }
 
 canvas.addEventListener('click', function(event) {
@@ -191,7 +175,7 @@ document.getElementById('reset-button').addEventListener('click', () => {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	let xGridSize = document.getElementById('x-dimension-input').value;
 	let yGridSize = document.getElementById('y-dimension-input').value;
-	generateStartingCells(xGridSize,yGridSize, true, randomColors.checked);
+	generateStartingCells(xGridSize,yGridSize, true, randomColors.checked, parseInt(cellSizeInput.value));
 });
 
 
@@ -205,4 +189,4 @@ document.getElementById('step-button').addEventListener('click', () => {
 	}
 })
 
-generateStartingCells(100,60, true, randomColors.checked);
+generateStartingCells(100,60, true, randomColors.checked, cellSizeInput.value);
